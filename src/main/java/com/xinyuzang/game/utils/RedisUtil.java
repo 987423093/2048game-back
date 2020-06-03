@@ -3,7 +3,6 @@ package com.xinyuzang.game.utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -41,13 +40,13 @@ public class RedisUtil {
     private int maxIdle;
 
     @Bean
-    public Jedis getJedisPool() {
+    public JedisPool getJedisPool() {
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxTotal(maxActive);
         jedisPoolConfig.setMaxIdle(maxIdle);
         jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
         jedisPoolConfig.setMinIdle(minIdle);
-        return new JedisPool(jedisPoolConfig, host, port, timeout, password).getResource();
+        return new JedisPool(jedisPoolConfig, host, port, timeout, password);
     }
 }

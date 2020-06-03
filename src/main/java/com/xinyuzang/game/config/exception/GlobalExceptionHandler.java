@@ -1,4 +1,4 @@
-package com.xinyuzang.game.config;
+package com.xinyuzang.game.config.exception;
 
 import com.xinyuzang.game.domain.common.ApiResult;
 import org.springframework.validation.FieldError;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ApiResult globalExceptionHandler(Exception exception) {
 
-        return ApiResult.error("服务器异常");
+        return ApiResult.error(exception.getMessage());
     }
 
     /**

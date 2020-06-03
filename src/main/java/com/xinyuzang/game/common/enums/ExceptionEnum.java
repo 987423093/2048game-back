@@ -19,7 +19,11 @@ public enum ExceptionEnum {
     /**
      * 未登录
      */
-    TOKEN_UN_LOGIN(102, "未登录");
+    TOKEN_UN_LOGIN(102, "未登录"),
+    /**
+     * 账号或者密码错误
+     */
+    LOGIN_FAILED(103, "账号或者密码错误");
 
 
     private int code;

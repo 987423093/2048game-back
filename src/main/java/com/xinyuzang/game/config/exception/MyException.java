@@ -1,4 +1,4 @@
-package com.xinyuzang.game.config;
+package com.xinyuzang.game.config.exception;
 
 import com.xinyuzang.game.common.enums.ExceptionEnum;
 
@@ -10,7 +10,7 @@ import com.xinyuzang.game.common.enums.ExceptionEnum;
  */
 public class MyException extends RuntimeException {
 
-    MyException(ExceptionEnum exceptionEnum) {
+    public MyException(ExceptionEnum exceptionEnum) {
         super(exceptionEnum.getMessage());
     }
 }
