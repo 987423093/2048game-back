@@ -1,5 +1,7 @@
 package com.xinyuzang.game.domain.common;
 
+import com.xinyuzang.game.common.enums.ExceptionEnum;
+
 import java.io.Serializable;
 
 /**
@@ -35,7 +37,7 @@ public class ApiResult<T> implements Serializable {
     public static <T>ApiResult<T> error(String message) {
 
         ApiResult<T> apiResult = new ApiResult<>();
-        apiResult.setCode(500);
+        apiResult.setCode(ExceptionEnum.SERVER_ERROR.getCode());
         apiResult.setMessage(message);
         return apiResult;
     }

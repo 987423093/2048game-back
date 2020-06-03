@@ -19,13 +19,13 @@ public class MyBatisPlusGenerator {
         AutoGenerator autoGenerator = new AutoGenerator();
         //设置数据源
         String propertiesUrl = System.class.getResource("/db.properties").getPath();
-        autoGenerator.setDataSource(MyBatisPlusUtils.getDataSourceConfig(propertiesUrl));
+        autoGenerator.setDataSource(MyBatisPlusUtil.getDataSourceConfig(propertiesUrl));
         //设置全局配置
-        autoGenerator.setGlobalConfig(MyBatisPlusUtils.getGlobalConfig());
+        autoGenerator.setGlobalConfig(MyBatisPlusUtil.getGlobalConfig());
         //包名设置
-        autoGenerator.setPackageInfo(MyBatisPlusUtils.getPackageConfig());
+        autoGenerator.setPackageInfo(MyBatisPlusUtil.getPackageConfig());
         //数据库配置
-        autoGenerator.setStrategy(MyBatisPlusUtils.getStrategyConfig());
+        autoGenerator.setStrategy(MyBatisPlusUtil.getStrategyConfig());
         //自定义配置
         InjectionConfig injectionConfig = new InjectionConfig() {
             @Override

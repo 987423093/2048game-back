@@ -14,7 +14,7 @@ import java.util.Properties;
  * @author zhoutao
  * @date 2020/6/1
  */
-public class MyBatisPlusUtils {
+public class MyBatisPlusUtil {
 
     /**
      * 数据源配置

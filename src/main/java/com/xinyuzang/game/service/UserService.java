@@ -1,7 +1,7 @@
 package com.xinyuzang.game.service;
 
-import com.xinyuzang.game.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xinyuzang.game.domain.entity.User;
 
 /**
  * <p>

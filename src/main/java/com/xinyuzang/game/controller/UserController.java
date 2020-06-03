@@ -2,20 +2,27 @@ package com.xinyuzang.game.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xinyuzang.game.common.constant.RedisConstant;
 import com.xinyuzang.game.domain.common.ApiResult;
 import com.xinyuzang.game.domain.entity.User;
 import com.xinyuzang.game.domain.pojo.UserRequest;
 import com.xinyuzang.game.domain.pojo.UserResponse;
 import com.xinyuzang.game.service.UserService;
+import com.xinyuzang.game.utils.RedisUtil;
+import com.xinyuzang.game.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author XinYuZang
@@ -28,24 +35,17 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 登录
+     *
      * @param userRequest
      * @return
      */
     @PostMapping("login")
-    public ApiResult<UserResponse> login(@RequestBody UserRequest userRequest) {
-
-        if (userRequest == null) {
-            return ApiResult.error("登陆失败，请输入账号密码");
-        }
-        if (StringUtils.isEmpty(userRequest.getUsername())) {
-            return ApiResult.error("登陆失败，请输入用户名");
-        }
-        if (StringUtils.isEmpty(userRequest.getPassword())) {
-            return ApiResult.error("登陆失败，请输入密码");
-        }
+    public ApiResult<UserResponse> login(@RequestBody @Validated UserRequest userRequest) {
 
         log.info(userRequest.toString());
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -55,28 +55,26 @@ public class UserController {
         if (user == null) {
             return ApiResult.error("请输入正确的账号密码");
         }
+        //登录成功，创建token
+        String token = TokenUtil.createJwtToken(user.getId());
+        try (Jedis jedis = redisUtil.getJedisPool()) {
+            jedis.set(RedisConstant.TOKEN_PREFIX + user.getId(), token);
+            jedis.expire(RedisConstant.TOKEN_PREFIX + user.getId(), RedisConstant.EXPIRE_TIME);
+        }
         UserResponse userResponse = new UserResponse();
         BeanUtils.copyProperties(user, userResponse);
+        userResponse.setToken(token);
         return ApiResult.success(userResponse);
     }
 
     /**
      * 注册
+     *
      * @param userRequest
      * @return
      */
     @PostMapping("register")
-    public ApiResult register(@RequestBody UserRequest userRequest) {
-
-        if (userRequest == null) {
-            return ApiResult.error("注册失败，请输入账号密码");
-        }
-        if (StringUtils.isEmpty(userRequest.getUsername())) {
-            return ApiResult.error("注册失败，请输入用户名");
-        }
-        if (StringUtils.isEmpty(userRequest.getPassword())) {
-            return ApiResult.error("注册失败，请输入密码");
-        }
+    public ApiResult register(@RequestBody @Validated UserRequest userRequest) {
 
         log.info(userRequest.toString());
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -92,6 +90,7 @@ public class UserController {
         userService.save(registerUser);
         return ApiResult.success();
     }
+
 
 }
 
