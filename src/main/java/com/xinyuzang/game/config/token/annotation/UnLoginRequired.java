@@ -1,4 +1,4 @@
-package com.xinyuzang.game.config.auth;
+package com.xinyuzang.game.config.token.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,5 +1,6 @@
-package com.xinyuzang.game.config.auth;
+package com.xinyuzang.game.config.token;
 
+import com.xinyuzang.game.config.token.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

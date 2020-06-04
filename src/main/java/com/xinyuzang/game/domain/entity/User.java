@@ -19,8 +19,8 @@ public class User implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "user_id", type = IdType.AUTO)
+    private Integer userId;
 
     /**
      * 用户名
@@ -38,12 +38,12 @@ public class User implements Serializable {
     private String nickName;
 
 
-    public Integer getId() {
-        return id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -73,7 +73,7 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-        "id=" + id +
+        "userId=" + userId +
         ", username=" + username +
         ", password=" + password +
         ", nickName=" + nickName +

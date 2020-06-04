@@ -1,16 +1,16 @@
 package com.xinyuzang.game.domain.pojo;
 
+import com.xinyuzang.game.domain.common.BaseRequest;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 
 /**
  * @author zhoutao
  * @date 2020/6/1
  */
 @Data
-public class UserRequest implements Serializable {
+public class UserRequest extends BaseRequest {
 
     /**
      * 用户名

@@ -15,7 +15,7 @@ public enum ExceptionEnum {
     /**
      * token失效
      */
-    TOKEN_INVALID(101, "token失效"),
+    TOKEN_INVALID(101, "用户已失效，请重新登录"),
     /**
      * 未登录
      */
@@ -23,7 +23,15 @@ public enum ExceptionEnum {
     /**
      * 账号或者密码错误
      */
-    LOGIN_FAILED(103, "账号或者密码错误");
+    LOGIN_FAILED(103, "账号或者密码错误"),
+    /**
+     * 用户名称为空
+     */
+    USERNAME_EMPTY(104, "请输入用户名"),
+    /**
+     * 用户密码为空
+     */
+    PASSWORD_EMPTY(105, "请输入密码");
 
 
     private int code;

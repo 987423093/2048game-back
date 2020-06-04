@@ -1,4 +1,4 @@
-package com.xinyuzang.game.config;
+package com.xinyuzang.game.config.filter;
 
 import org.springframework.stereotype.Component;
 

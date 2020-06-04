@@ -10,11 +10,6 @@ import lombok.Data;
 public class UserResponse {
 
     /**
-     * 主键
-     */
-    private Integer id;
-
-    /**
      * 用户名
      */
     private String username;
