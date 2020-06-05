@@ -9,6 +9,7 @@ import com.xinyuzang.game.domain.pojo.UserRequest;
 import com.xinyuzang.game.domain.pojo.UserResponse;
 import com.xinyuzang.game.service.UserService;
 import com.xinyuzang.game.utils.CopyUtils;
+import com.xinyuzang.game.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
 /**
  * <p>
@@ -32,6 +34,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * 登录
@@ -102,7 +106,10 @@ public class UserController {
     @PostMapping("logout")
     public ApiResult logout(@RequestBody BaseRequest baseRequest) {
 
-        return null;
+        try (Jedis jedis = redisUtil.getJedisPool().getResource()) {
+            jedis.del(baseRequest.getUserId() + "");
+        }
+        return ApiResult.success();
     }
 }
 
