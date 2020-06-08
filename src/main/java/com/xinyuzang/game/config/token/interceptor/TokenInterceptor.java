@@ -14,6 +14,7 @@ import com.xinyuzang.game.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -24,6 +25,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,8 +64,11 @@ public class TokenInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
+        if (!(handler instanceof HandlerMethod) || BasicErrorController.class.equals(((HandlerMethod) handler).getBean().getClass())) {
+            throw new MyException("匹配不到接口");
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         UnLoginRequired methodAnnotation = method.getAnnotation(UnLoginRequired.class);
@@ -97,17 +102,18 @@ public class TokenInterceptor implements HandlerInterceptor {
      * @param response
      * @throws Exception
      */
-    private void doLogin(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    private void doLogin(HttpServletRequest request, HttpServletResponse response) {
 
         //解析用户名密码信息
-        BufferedReader br;
         StringBuilder sb = new StringBuilder();
-        br = request.getReader();
-        String str;
-        while ((str = br.readLine()) != null) {
-            sb = sb.append(str);
+        try(BufferedReader br = request.getReader()) {
+            String str;
+            while ((str = br.readLine()) != null) {
+                sb = sb.append(str);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
         }
-        br.close();
         Gson gson = new Gson();
         Map map = gson.fromJson(sb.toString(), HashMap.class);
 
@@ -131,7 +137,9 @@ public class TokenInterceptor implements HandlerInterceptor {
         try(Jedis jedis = redisUtil.getJedisPool().getResource()) {
             jedis.setex(RedisConstant.TOKEN_PREFIX + user.getUserId(), RedisConstant.EXPIRE_TIME, token);
         }
-        response.setHeader("Set-Cookie", "token=" + token);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setPath("/");
+        response.addCookie(cookie);
         // 将userId带到全局入参里面
         MyHttpServletRequestWrapper requestWrapper = (MyHttpServletRequestWrapper) request;
         requestWrapper.addUserId(user.getUserId());
@@ -145,6 +153,9 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         // 1.判断用户是否登录过，前端是否传过来token
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            throw new MyException(ExceptionEnum.TOKEN_UN_LOGIN);
+        }
         String token = cookies[0].getValue();
         if (StringUtils.isEmpty(token)) {
             throw new MyException(ExceptionEnum.TOKEN_UN_LOGIN);

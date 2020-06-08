@@ -24,6 +24,11 @@ public class UserRequest extends BaseRequest {
     @NotBlank(message = "密码不能为空")
     private String password;
 
+    /**
+     * 昵称
+     */
+    private String nickName;
+
     @Override
     public String toString() {
         return "UserRequest{" +

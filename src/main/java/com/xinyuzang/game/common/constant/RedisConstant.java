@@ -14,4 +14,9 @@ public class RedisConstant {
      * redis十天key过期时间
      */
     public static final int EXPIRE_TIME = 10 * 24 * 60 * 60 * 1000;
+
+    /**
+     * 历史比分前缀
+     */
+    public static final String HISTORY_RANK = "rank:history";
 }

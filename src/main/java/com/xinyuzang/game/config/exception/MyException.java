@@ -13,4 +13,8 @@ public class MyException extends RuntimeException {
     public MyException(ExceptionEnum exceptionEnum) {
         super(exceptionEnum.getMessage());
     }
+
+    public MyException(String message) {
+        super(message);
+    }
 }
