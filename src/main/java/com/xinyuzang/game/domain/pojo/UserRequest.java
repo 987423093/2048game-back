@@ -29,6 +29,11 @@ public class UserRequest extends BaseRequest {
      */
     private String nickName;
 
+    /**
+     * token
+     */
+    private String token;
+
     @Override
     public String toString() {
         return "UserRequest{" +

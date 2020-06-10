@@ -28,14 +28,15 @@ public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     /**
-     * 添加userId到请求头里面
-     * @param userId
+     * 添加字符串到请求头里面
+     * @param field
+     * @param str
      */
-    public void addUserId(Integer userId) {
+    public void addString(String field, String str) {
 
         Gson gson = new Gson();
         Map map = gson.fromJson(new String(body, Charset.forName("UTF-8")), HashMap.class);
-        map.put("userId", userId);
+        map.put(field, str);
         body = gson.toJson(map, HashMap.class).getBytes(Charset.forName("UTF-8"));
     }
 

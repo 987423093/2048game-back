@@ -18,4 +18,9 @@ public class UserResponse {
      * 昵称
      */
     private String nickName;
+
+    /**
+     * token
+     */
+    private String token;
 }

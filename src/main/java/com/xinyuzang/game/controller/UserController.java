@@ -52,7 +52,9 @@ public class UserController {
         if (user == null) {
             return ApiResult.error("请输入正确的账号密码");
         }
-        return ApiResult.success(CopyUtils.copyProperties(user, UserResponse.class));
+        UserResponse userResponse = CopyUtils.copyProperties(user, UserResponse.class);
+        userResponse.setToken(userRequest.getToken());
+        return ApiResult.success(userResponse);
     }
 
     /**

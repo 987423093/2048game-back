@@ -14,7 +14,6 @@ import com.xinyuzang.game.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -66,8 +65,10 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if (!(handler instanceof HandlerMethod) || BasicErrorController.class.equals(((HandlerMethod) handler).getBean().getClass())) {
-            throw new MyException("匹配不到接口");
+        // || BasicErrorController.class.equals(((HandlerMethod) handler).getBean().getClass())
+        if (!(handler instanceof HandlerMethod)) {
+//            throw new MyException("匹配不到接口");
+            return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
@@ -137,12 +138,12 @@ public class TokenInterceptor implements HandlerInterceptor {
         try(Jedis jedis = redisUtil.getJedisPool().getResource()) {
             jedis.setex(RedisConstant.TOKEN_PREFIX + user.getUserId(), RedisConstant.EXPIRE_TIME, token);
         }
-        Cookie cookie = new Cookie("token", token);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+
+        response.addHeader("Set-Cookie", "token=" + token + "; path=" + "/" + "; domain=" + "127.0.0.1");
         // 将userId带到全局入参里面
         MyHttpServletRequestWrapper requestWrapper = (MyHttpServletRequestWrapper) request;
-        requestWrapper.addUserId(user.getUserId());
+        requestWrapper.addString("userId", user.getUserId() + "");
+        requestWrapper.addString("token", token);
     }
 
     /**
@@ -172,6 +173,6 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         // 将userId带到全局入参里面
         MyHttpServletRequestWrapper requestWrapper = (MyHttpServletRequestWrapper) request;
-        requestWrapper.addUserId(Integer.valueOf(userId));
+        requestWrapper.addString("userId", userId);
     }
 }
