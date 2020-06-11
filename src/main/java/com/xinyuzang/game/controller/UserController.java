@@ -5,6 +5,7 @@ import com.xinyuzang.game.config.token.annotation.UnLoginRequired;
 import com.xinyuzang.game.domain.common.ApiResult;
 import com.xinyuzang.game.domain.common.BaseRequest;
 import com.xinyuzang.game.domain.entity.User;
+import com.xinyuzang.game.domain.pojo.RegisterRequest;
 import com.xinyuzang.game.domain.pojo.UserRequest;
 import com.xinyuzang.game.domain.pojo.UserResponse;
 import com.xinyuzang.game.service.UserService;
@@ -65,7 +66,7 @@ public class UserController {
      */
     @PostMapping("register")
     @UnLoginRequired
-    public ApiResult register(@RequestBody @Validated UserRequest userRequest) {
+    public ApiResult register(@RequestBody @Validated RegisterRequest userRequest) {
 
         log.info(userRequest.toString());
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();

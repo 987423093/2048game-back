@@ -80,16 +80,18 @@ public class TokenInterceptor implements HandlerInterceptor {
                 this.doLogin(request, response);
             }
             return true;
-        }
-        // 从cookie里面获取token校验token是否有效
-        this.verifyToken(request);
+        }else {
+            // 从cookie里面获取token校验token是否有效
+            this.verifyToken(request);
 
+        }
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 
+        System.out.println(modelAndView);
     }
 
     @Override
