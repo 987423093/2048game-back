@@ -141,7 +141,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             jedis.setex(RedisConstant.TOKEN_PREFIX + user.getUserId(), RedisConstant.EXPIRE_TIME, token);
         }
 
-        response.addHeader("Set-Cookie", "token=" + token + "; path=" + "/" + "; domain=" + "127.0.0.1");
+        response.addHeader("Set-Cookie", "token=" + token + "; path=" + "/" + "; domain=" + "localhost");
         // 将userId带到全局入参里面
         MyHttpServletRequestWrapper requestWrapper = (MyHttpServletRequestWrapper) request;
         requestWrapper.addString("userId", user.getUserId() + "");

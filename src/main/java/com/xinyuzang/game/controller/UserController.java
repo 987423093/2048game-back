@@ -1,6 +1,7 @@
 package com.xinyuzang.game.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.xinyuzang.game.common.constant.RedisConstant;
 import com.xinyuzang.game.config.token.annotation.UnLoginRequired;
 import com.xinyuzang.game.domain.common.ApiResult;
 import com.xinyuzang.game.domain.common.BaseRequest;
@@ -79,7 +80,7 @@ public class UserController {
         registerUser.setUsername(userRequest.getUsername());
         registerUser.setPassword(userRequest.getPassword());
         registerUser.setNickName(StringUtils.isEmpty(userRequest.getNickName()) ? userRequest.getUsername() : userRequest.getNickName());
-        userService.save(registerUser);
+            userService.save(registerUser);
         return ApiResult.success();
     }
 
@@ -111,7 +112,7 @@ public class UserController {
     public ApiResult logout(@RequestBody BaseRequest baseRequest) {
 
         try (Jedis jedis = redisUtil.getJedisPool().getResource()) {
-            jedis.del(baseRequest.getUserId() + "");
+            jedis.del(RedisConstant.TOKEN_PREFIX + baseRequest.getUserId() + "");
         }
         return ApiResult.success();
     }

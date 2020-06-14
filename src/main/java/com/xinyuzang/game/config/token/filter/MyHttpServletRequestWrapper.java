@@ -36,6 +36,9 @@ public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         Gson gson = new Gson();
         Map map = gson.fromJson(new String(body, Charset.forName("UTF-8")), HashMap.class);
+        if (null == map) {
+            map = new HashMap<>(4);
+        }
         map.put(field, str);
         body = gson.toJson(map, HashMap.class).getBytes(Charset.forName("UTF-8"));
     }

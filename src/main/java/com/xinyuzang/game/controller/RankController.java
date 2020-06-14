@@ -2,6 +2,7 @@ package com.xinyuzang.game.controller;
 
 import com.xinyuzang.game.common.constant.RedisConstant;
 import com.xinyuzang.game.config.exception.MyException;
+import com.xinyuzang.game.config.token.annotation.UnLoginRequired;
 import com.xinyuzang.game.domain.common.ApiResult;
 import com.xinyuzang.game.domain.common.PagerRequest;
 import com.xinyuzang.game.domain.pojo.RankRequest;
@@ -36,6 +37,7 @@ public class RankController {
      * @return
      */
     @PostMapping("listHistoryRank")
+    @UnLoginRequired
     public ApiResult<List<RankResponse>> listHistoryRank(@RequestBody @Validated PagerRequest pagerRequest) {
 
         Set<String> rankSet;
