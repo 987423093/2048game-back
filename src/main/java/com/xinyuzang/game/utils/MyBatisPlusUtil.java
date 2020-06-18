@@ -85,7 +85,7 @@ public class MyBatisPlusUtil {
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
         strategyConfig.setNaming(NamingStrategy.underline_to_camel);
-        strategyConfig.setInclude("user");
+        strategyConfig.setInclude("bill");
         return strategyConfig;
     }
 }

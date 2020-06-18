@@ -70,6 +70,9 @@ public class TokenInterceptor implements HandlerInterceptor {
 //            throw new MyException("匹配不到接口");
             return true;
         }
+        if ("/error".equals(request.getRequestURI())){
+            return true;
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         UnLoginRequired methodAnnotation = method.getAnnotation(UnLoginRequired.class);
@@ -91,7 +94,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 
-        System.out.println(modelAndView);
+//        System.out.println(modelAndView);
     }
 
     @Override
@@ -141,7 +144,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             jedis.setex(RedisConstant.TOKEN_PREFIX + user.getUserId(), RedisConstant.EXPIRE_TIME, token);
         }
 
-        response.addHeader("Set-Cookie", "token=" + token + "; path=" + "/" + "; domain=" + "localhost");
+        response.addHeader("Set-Cookie", "token=" + token + "; path=" + "/" + "; domain=" + "127.0.0.1");
         // 将userId带到全局入参里面
         MyHttpServletRequestWrapper requestWrapper = (MyHttpServletRequestWrapper) request;
         requestWrapper.addString("userId", user.getUserId() + "");
