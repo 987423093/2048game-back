@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,8 @@ public class RankController {
 
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private JedisPool jedisPool;
 
     /**
      * 列出历史的得分
@@ -41,7 +44,7 @@ public class RankController {
     public ApiResult<List<RankResponse>> listHistoryRank(@RequestBody @Validated PagerRequest pagerRequest) {
 
         Set<String> rankSet;
-        try (Jedis jedis = redisUtil.getJedisPool().getResource()) {
+        try (Jedis jedis = jedisPool.getResource()) {
             rankSet = jedis.zrevrange(RedisConstant.HISTORY_RANK, 0, -1);
         }catch (Exception e) {
             throw new MyException("获取历史排行失败");
@@ -66,7 +69,7 @@ public class RankController {
     @PostMapping("addHistoryRank")
     public ApiResult addHistoryRank(@RequestBody @Validated RankRequest rankRequest) {
 
-        try (Jedis jedis = redisUtil.getJedisPool().getResource()) {
+        try (Jedis jedis = jedisPool.getResource()) {
             jedis.zadd(RedisConstant.HISTORY_RANK, rankRequest.getScore()
                     , rankRequest.getScore()
                     + "," + rankRequest.getNickName()

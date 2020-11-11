@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 /**
  * <p>
@@ -38,7 +39,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private RedisUtil redisUtil;
+    private JedisPool jedisPool;
 
     /**
      * 登录
@@ -111,7 +112,7 @@ public class UserController {
     @PostMapping("logout")
     public ApiResult logout(@RequestBody BaseRequest baseRequest) {
 
-        try (Jedis jedis = redisUtil.getJedisPool().getResource()) {
+        try (Jedis jedis = jedisPool.getResource()) {
             jedis.del(RedisConstant.TOKEN_PREFIX + baseRequest.getUserId() + "");
         }
         return ApiResult.success();

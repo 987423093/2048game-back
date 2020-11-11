@@ -40,7 +40,7 @@ public class RedisUtil {
     private int maxIdle;
 
     @Bean
-    public JedisPool getJedisPool() {
+    public JedisPool jedisPool() {
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxTotal(maxActive);

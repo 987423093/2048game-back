@@ -19,6 +19,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +42,7 @@ import java.util.Objects;
 public class TokenInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private RedisUtil redisUtil;
+    private JedisPool jedisPool;
     @Autowired
     private UserService userService;
 
@@ -140,7 +141,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         // 登录成功，创建token
         String token = TokenUtil.createJwtToken(user.getUserId());
-        try(Jedis jedis = redisUtil.getJedisPool().getResource()) {
+        try(Jedis jedis = jedisPool.getResource()) {
             jedis.setex(RedisConstant.TOKEN_PREFIX + user.getUserId(), RedisConstant.EXPIRE_TIME, token);
         }
 
@@ -170,7 +171,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         // 判断redis里面token与当前传入token是否一致
         String userId = TokenUtil.parseJWT(token);
         String redisToken;
-        try(Jedis jedis = redisUtil.getJedisPool().getResource()){
+        try(Jedis jedis = jedisPool.getResource()){
             redisToken = jedis.get(RedisConstant.TOKEN_PREFIX + userId);
         }
         if (!Objects.equals(redisToken, token)) {
